@@ -7,7 +7,8 @@ import backend
 
 import tvm
 from tvm import auto_scheduler
-from tvm.contrib import graph_executor
+import tvm.contrib.graph_executor as graph_executor
+# from tvm.contrib import graph_executor
 from tvm.runtime import vm as runtime_vm
 
 import numpy as np
@@ -78,10 +79,15 @@ class BackendTVM(backend.Backend):
             )
 
         print('TVM: loading model ' + compiled_model)
-
+        
         mod = tvm.runtime.load_module(compiled_model)
-        device = tvm.device("llvm", 0)
 
+        if os.environ.get("USE_GPU"):
+            print('TVM: USE_GPU ')
+            device = tvm.vulkan(0)
+        else:
+            device = tvm.device("llvm", 0)
+            
         if os.path.isfile(os.path.join(work_dir, "vm_exec_code.ro")):
             self.executor_type = "virtual_machine"
 

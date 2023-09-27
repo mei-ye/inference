@@ -29,6 +29,10 @@ if [ $device == "cpu" ] ; then
     export CUDA_VISIBLE_DEVICES=""
 fi
 
+if [ $device == "gpu" ] ; then
+    export USE_GPU="yes"
+fi    
+
 name="$model-$backend"
 extra_args=""
 
